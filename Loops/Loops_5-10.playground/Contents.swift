@@ -1,4 +1,5 @@
 import Cocoa
+import Foundation
 
 // MARK: - Exercise 1: count characters
 // Solución 1: for-in
@@ -199,12 +200,14 @@ func fizzBuzz() -> [String] {
 /// print(resultado3) // true
 /// ```
 func contains(hayStack: String, needle: String) -> Bool {
+    
     if needle.isEmpty {
         return true
-    } else {
-        hayStack.count < needle.count
+    }
+    if hayStack.count < needle.count {
         return false
     }
+    
     return hayStack.range(of: needle) != nil
 }
 let resultado1 = contains(hayStack: "Hola mundo", needle: "mundo")
@@ -249,8 +252,17 @@ func find(hayStack: String, needle: String) -> Int {
     if let range = hayStack.range(of: needle) {
         return hayStack.distance(from: hayStack.startIndex, to: range.lowerBound)
     }
-    
+    return NSNotFound
 }
+
+let prueba1 = find(hayStack: "Hola mundo", needle: "mundo")
+print(prueba1) // 5
+
+let prueba2 = find(hayStack: "Hola mundo", needle: "Swift")
+print(prueba2) // NSNotFound
+
+let prueba3 = find(hayStack: "Hola mundo", needle: "")
+print(prueba3) // NSNotFound
 
 
 // MARK: - Exercise 10: containsOccurrences
@@ -281,3 +293,32 @@ func find(hayStack: String, needle: String) -> Int {
 /// let resultado3 = containsOccurrences(hayStack: "Hola mundo", needle: "o", numOfOccs: -1)
 /// print(resultado3) // false
 /// ```
+func containsOccurrences(hayStack: String, needle: String, numOfOccs: Int) -> Bool {
+    if numOfOccs < 0 {
+        return false
+    }
+    
+    if numOfOccs == 0 {
+        return hayStack.range(of: needle) == nil
+    }
+
+    var occurrences = 0
+    var range = hayStack.startIndex
+
+    while let foundRange = hayStack.range(of: needle, range: range..<hayStack.endIndex) {
+        occurrences += 1
+        range = foundRange.upperBound // Mover al final de la última ocurrencia
+    }
+
+    return occurrences == numOfOccs
+}
+
+let resultado_1 = containsOccurrences(hayStack: "Hola mundo mundo", needle: "mundo", numOfOccs: 2)
+print(resultado_1)
+
+let resultado_2 = containsOccurrences(hayStack: "Hola mundo", needle: "Swift", numOfOccs: 0)
+print(resultado_2)
+
+let resultado_3 = containsOccurrences(hayStack: "Hola mundo", needle: "o", numOfOccs: -1)
+print(resultado_3) // false
+
