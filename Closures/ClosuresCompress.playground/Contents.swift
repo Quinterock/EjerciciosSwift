@@ -22,18 +22,16 @@ import Foundation
 /// print(resultEmpty) // Output: 0
 ///
 
-func sumAll(sequence: [Int]) -> Int {
-    return sequence.reduce(0, {$0 + $1})
-    //es igual poner
-//  return sequence.reduce(0, +)
+func sumAll (sequence: [Int]) -> Int {
+    //return sequence.reduce(0, {acomulador, numero in
+        //acomulador + numero})
+    //return sequence.reduce(0, {$0 + $1})
+    return sequence.reduce(0, +)
 }
 
-// Ejemplo de uso
 let numbers = [1, 2, 3, 4, 5]
-print(sumAll(sequence: numbers)) // Output: 15
-
-let empty = [Int]()
-print(sumAll(sequence: empty)) // Output: 0
+let result1 = sumAll(sequence: numbers)
+print(result1)//15
 
 // MARK: - Exercise 2: multiplyAll
 /// Calcula el producto de todos los elementos en un array de números enteros
@@ -71,7 +69,7 @@ print(resultEmpty2)
 
 // MARK: - Exercise 3: compress
 /// Tipo alias que representa una función que combina dos enteros y produce un resultado entero. Debe llamarse IntCombiner
-typealias IntCombiner = (Int, Int) -> Int
+
 
 /// Reduce un array de enteros a un único valor mediante una operación de combinación especificada como último parámetro
 ///
@@ -112,6 +110,21 @@ typealias IntCombiner = (Int, Int) -> Int
 /// print(maximum) // Output: 4
 /// ```
 
+typealias IntCombiner = (Int, Int) -> Int
+
+func compress(sequence: [Int], initialValue : Int, combinationOperation: IntCombiner) -> Int {
+    return sequence.reduce(initialValue, combinationOperation)
+}
+
+let numbers3 = [1, 2, 3, 4]
+
+// Ejemplo de suma
+let sum = compress(sequence: numbers3, initialValue: 0, combinationOperation: { $0 + $1 })
+print(sum) // Output: 10
+
+// Ejemplo de multiplicación
+let product = compress(sequence: numbers3, initialValue: 1, combinationOperation: { $0 * $1 })
+print(product) // Output: 24
 
 // MARK: Exercise 4: sumWithCompress
 /// Calcula la suma de todos los elementos en un array de enteros utilizando la función `compress`
@@ -133,8 +146,17 @@ typealias IntCombiner = (Int, Int) -> Int
 /// print(resultEmpty) // Output: 0
 /// ```
 
+func sumWithCompress(sequence: [Int]) -> Int {
+    return compress(sequence: sequence, initialValue: 0, combinationOperation: +)
+}
 
+let numbers4 = [1, 2, 3, 4, 5]
+let result4 = sumWithCompress(sequence: numbers4)
+print(result4)
 
+let empty4 = [Int]()
+let resultEmpty4 = sumWithCompress(sequence: empty4)
+print(resultEmpty4)
 
 // MARK: Exercise 5: multiplyWithCompress
 /// Calcula el producto de todos los elementos en un array de enteros utilizando la función `compress`
@@ -156,9 +178,16 @@ typealias IntCombiner = (Int, Int) -> Int
 /// print(resultEmpty) // Output: 1
 /// ```
 
-func multiplyWithCompress(sequence: [Int]) -> Int {
-    return compress(sequence: sequence, initialValue: 1, combinationOperation: 1)
+func multiplyWithCompress (sequence: [Int]) -> Int {
+return compress(sequence: sequence, initialValue: 1, combinationOperation: *)
 }
+let numbers5 = [2, 3, 4]
+let result5 = multiplyWithCompress(sequence: numbers5)
+print(result5)
+
+let empty5 = [Int]()
+let resultEmpty5 = multiplyWithCompress(sequence: empty5)
+print(resultEmpty5)
 
 // MARK: Exercise 6: sumEvenWithCompress
 /// Calcula la suma de todos los números pares en un array de enteros utilizando la función `compress`
@@ -182,16 +211,22 @@ func multiplyWithCompress(sequence: [Int]) -> Int {
 /// let resultEmpty = sumEvenWithCompress(sequence: empty)
 /// print(resultEmpty) // Output: 0
 /// ```
-
 func sumEvenWithCompress(sequence: [Int]) -> Int {
-    return compress(sequence: sequence, initialValue: 0) { accum, number in
-        if number % 2 == 0 {
-            return accum + number
-        } else {
-            return accum
-        }
-    })
+return compress(sequence: sequence, initialValue: 0, combinationOperation:
+                    {$1 % 2 == 0 ? $0 + $1 : $0})
 }
+
+let numbers6 = [1, 2, 3, 4, 5, 6]
+let result6 = sumEvenWithCompress(sequence: numbers6)
+print(result6)
+
+let noEvens = [1, 3, 5, 7]
+let resultNoEvens = sumEvenWithCompress(sequence: noEvens)
+print(resultNoEvens)
+
+let empty6 = [Int]()
+let resultEmpty6 = sumEvenWithCompress(sequence: empty6)
+print(resultEmpty6)
 
 // MARK: Exercise 7: sumEvensSubtractOddsWithCompress
 /// Calcula la diferencia entre la suma de números pares y la suma de números impares en un array de enteros
@@ -219,8 +254,24 @@ func sumEvenWithCompress(sequence: [Int]) -> Int {
 /// let resultEmpty = sumEvensSubtractOddsWithCompress(sequence: empty)
 /// print(resultEmpty) // Output: 0
 /// ```
+func sumEvensSubtractOddsWithCompress(sequence: [Int]) -> Int {
+    return compress(sequence: sequence, initialValue: 0, combinationOperation: { $1 % 2 == 0 ? $0 + $1 : $0 - $1 })
+}
+let numbers7 = [1, 2, 3, 4]
+let result7 = sumEvensSubtractOddsWithCompress(sequence: numbers7)
+print(result7)  // Output: 2 ((2 + 4) - (1 + 3))
 
+let onlyEvens = [2, 4, 6]
+let resultEvens7 = sumEvensSubtractOddsWithCompress(sequence: onlyEvens)
+print(resultEvens7)  // Output: 12
 
+let onlyOdds7 = [1, 3, 5]
+let resultOdds7 = sumEvensSubtractOddsWithCompress(sequence: onlyOdds7)
+print(resultOdds7)  // Output: -9
+
+let empty7 = [Int]()
+let resultEmpty7 = sumEvensSubtractOddsWithCompress(sequence: empty7)
+print(resultEmpty7)  // Output: 0
 
 // MARK: Exercise 8: maxElementWithCompress
 /// Encuentra el elemento más grande en un array de enteros utilizando la función `compress`
@@ -249,7 +300,28 @@ func sumEvenWithCompress(sequence: [Int]) -> Int {
 /// print(resultSingle) // Output: 42
 /// ```
 
+func maxElementsWithCompress (sequence: [Int]) -> Int {
+    if sequence.isEmpty {
+        return Int.min
+    }
+    return compress(sequence: sequence, initialValue: Int.min, combinationOperation: max)
+}
 
+let numbers8 = [1, 5, 2, 8, 3]
+let result8 = maxElementsWithCompress(sequence: numbers8)
+print(result8)
+
+let negatives8 = [-5, -2, -8, -1]
+let resultNeg8 = maxElementsWithCompress(sequence: negatives8)
+print(resultNeg8)
+
+let empty8 = [Int]()
+let resultEmpty8 = maxElementsWithCompress(sequence: empty8)
+print(resultEmpty8)
+
+let singleElement8 = [42]
+let resultSingle8 = maxElementsWithCompress(sequence: singleElement8)
+print(resultSingle8)
 
 // MARK: Exercise 9: minElementWithCompress
 /// Encuentra el elemento más pequeño en un array de enteros utilizando la función `compress`
@@ -278,8 +350,28 @@ func sumEvenWithCompress(sequence: [Int]) -> Int {
 /// print(resultSingle) // Output: 42
 /// ```
 
+func minElementWithCompress(sequence: [Int]) -> Int {
+    if sequence.isEmpty {
+        return Int.max
+    }
+    return compress(sequence: sequence, initialValue: Int.max, combinationOperation: min)
+}
 
+let numbers9 = [3, 1, 5, 2, 8]
+let result9 = minElementWithCompress(sequence: numbers9)
+print(result9)
 
+let negatives9 = [-5, -2, -8, -1]
+let resultNeg9 = minElementWithCompress(sequence: negatives9)
+print(resultNeg9)
+
+let empty9 = [Int]()
+let resultEmpty9 = minElementWithCompress(sequence: empty9)
+print(resultEmpty9)
+
+let singleElement9 = [42]
+let resultSingle9 = minElementWithCompress(sequence: singleElement9)
+print(resultSingle9)
 
 // MARK: - Exercise 10: positiveNumbersCountWithCompress
 /// Cuenta la cantidad de números positivos en un array de enteros utilizando la función `compress`
@@ -308,8 +400,24 @@ func sumEvenWithCompress(sequence: [Int]) -> Int {
 /// print(resultEmpty) // Output: 0
 /// ```
 
+func positiveNumbersCountWithCompress(sequence: [Int]) -> Int {
+    return compress(sequence: sequence, initialValue: 0, combinationOperation: { $0 + ($1 > 0 ? 1 : 0) })
+}
+let numbers10 = [-1, 0, 3, -4, 5, 6]
+let result10 = positiveNumbersCountWithCompress(sequence: numbers10)
+print(result10)
 
+let allNegative10 = [-1, -2, -3]
+let resultNeg10 = positiveNumbersCountWithCompress(sequence: allNegative10)
+print(resultNeg10)
 
+let withZero10 = [0, 0, 0]
+let resultZero10 = positiveNumbersCountWithCompress(sequence: withZero10)
+print(resultZero10)
+
+let empty10 = [Int]()
+let resultEmpty10 = positiveNumbersCountWithCompress(sequence: empty10)
+print(resultEmpty10)
 
 // MARK: - Exercise 11: allEvensWithCompress
 /// Verifica si todos los números en un array de enteros son pares utilizando la función `compress`
@@ -346,8 +454,32 @@ func sumEvenWithCompress(sequence: [Int]) -> Int {
 /// print(result5) // Output: true
 /// ```
 
+func allEvenWithCompress(sequence: [Int]) -> Bool {
+    if sequence.isEmpty {
+            return false
+        }
+    let evenCount = compress(sequence: sequence, initialValue: 0, combinationOperation: { $0 + ($1 % 2 == 0 ? 1 : 0) })
+    return evenCount == sequence.count
+}
+let allEven11 = [2, 4, 6, 8]
+let result11 = allEvenWithCompress(sequence: allEven11)
+print(result11) // Output: true
 
+let someOdd11 = [2, 4, 5, 6]
+let resultOdd11 = allEvenWithCompress(sequence: someOdd11)
+print(resultOdd11) // Output: false
 
+let empty11 = [Int]()
+let resultEmpty11 = allEvenWithCompress(sequence: empty11)
+print(resultEmpty11) // Output: false
+
+let singleOdd11 = [3]
+let resultSingleOdd11 = allEvenWithCompress(sequence: singleOdd11)
+print(resultSingleOdd11) // Output: false
+
+let singleEven11 = [2]
+let resultSingleEven11 = allEvenWithCompress(sequence: singleEven11)
+print(resultSingleEven11) // Output: true
 
 // MARK: - Exercise 12: allMultiplesOfThreeWithCompress
 /// Verifica si todos los números en un array de enteros son múltiplos de 3 utilizando la función `compress`
@@ -384,8 +516,37 @@ func sumEvenWithCompress(sequence: [Int]) -> Int {
 /// print(result5) // Output: true
 /// ```
 
+func allMultiplesOfThreeWithCompress(sequence: [Int]?) -> Bool {
+    guard let sequence = sequence else {
+        return false 
+    }
+    
+    if sequence.isEmpty {
+        return false 
+    }
+    
+    let multipleOfThree = compress(sequence: sequence, initialValue: 0, combinationOperation:  {$0 + ($1 % 3 == 0 ? 1 : $0)})
+    return multipleOfThree == sequence.count
+}
+let allMultiples12 = [3, 6, 9, 12]
+let result12 = allMultiplesOfThreeWithCompress(sequence: allMultiples12)
+print(result12) // Output: true
 
+let someNotMultiples12 = [3, 6, 7, 9]
+let resultNotMultiples12 = allMultiplesOfThreeWithCompress(sequence: someNotMultiples12)
+print(resultNotMultiples12) // Output: false
 
+let empty12 = [Int]()
+let resultEmpty12 = allMultiplesOfThreeWithCompress(sequence: empty12)
+print(resultEmpty12) // Output: false
+
+let singleNotMultiple12 = [4]
+let resultSingleNotMultiple12 = allMultiplesOfThreeWithCompress(sequence: singleNotMultiple12)
+print(resultSingleNotMultiple12) // Output: false
+
+let singleMultiple12 = [6]
+let resultSingleMultiple12 = allMultiplesOfThreeWithCompress(sequence: singleMultiple12)
+print(resultSingleMultiple12) // Output: true
 
 // MARK: - Exercise 13: sumAllEvensAndOddsWithCompress
 /// Calcula simultáneamente la suma de los números pares e impares en un array de enteros
@@ -418,8 +579,30 @@ func sumEvenWithCompress(sequence: [Int]) -> Int {
 /// print(resultEmpty) // Output: (evens: 0, odds: 0)
 /// ```
 
+func sumAllEvensAndOddsWithCompress(sequence: [Int]) -> (evens: Int, odds: Int) {
+    let evens = compress(sequence: sequence, initialValue: 0) { $0 + ($1 % 2 == 0 ? $1 : 0) }
+    let odds = compress(sequence: sequence, initialValue: 0) { $0 + ($1 % 2 != 0 ? $1 : 0) }
+    return (evens, odds)
+}
+let numbers13 = [1, 2, 3, 4, 5, 6]
+let result13 = sumAllEvensAndOddsWithCompress(sequence: numbers13)
+print(result13.evens) // Output: 12 (2 + 4 + 6)
+print(result13.odds)  // Output: 9 (1 + 3 + 5)
 
+let onlyEvens13 = [2, 4, 6]
+let resultEvens13 = sumAllEvensAndOddsWithCompress(sequence: onlyEvens13)
+print(resultEvens13.evens) // Output: 12
+print(resultEvens13.odds)  // Output: 0
 
+let onlyOdds13 = [1, 3, 5]
+let resultOdds13 = sumAllEvensAndOddsWithCompress(sequence: onlyOdds13)
+print(resultOdds13.evens) // Output: 0
+print(resultOdds13.odds)  // Output: 9
+
+let empty13 = [Int]()
+let resultEmpty13 = sumAllEvensAndOddsWithCompress(sequence: empty13)
+print(resultEmpty13.evens) // Output: 0
+print(resultEmpty13.odds)  // Output: 0
 // MARK: - Exercise 14: compress without initial value
 /// Modificación de la función compress sin valor inicial que combina los elementos de un array de enteros usando una operación específica
 ///
@@ -459,5 +642,70 @@ func sumEvenWithCompress(sequence: [Int]) -> Int {
 /// print(resultSingle) // Output: Optional(5)
 /// ```
 
+func compress1(sequence: [Int], // Suma: [1, 2, 3, 4] ->  accum = 1, number = 2 ||| accum = 3, number = 3 ||| accum = 6, number = 4
+              // Multiplicación: [1, 2, 3, 4] ->  accum = 1, number = 2 ||| accum = 2, number = 3 ||| accum = 6, number = 4 ||| accum = 24
+               // Mayor valor: [1, 2, 3, 4] ->  accum = 1, number = 2 ||| accum = 2, number = 3 ||| accum = 3, number = 4 ||| accum = 4
+             combinationOperation: IntCombiner) -> Int? {
+    // Si no conseguimos valor incial no podemos seguir con esta implementación
+    if sequence.isEmpty {
+        return nil
+    }
+    var accum = sequence.first! // Force unwrap porque el primer elemento existe
+    for number in sequence.dropFirst() {
+        accum = combinationOperation(accum, number)
+    }
+    return accum
+}
+
+
+
+func compress3(_ sequence:[Int], _ combinationOperation:IntCombiner) -> Int? {
+    guard let initialValue = sequence.first else {
+        return nil
+    }
+    
+    return sequence.reduce(initialValue,combinationOperation)
+}
+// Ejemplo 1: Suma
+let numbers14 = [1, 2, 3, 4]
+let sum14 = compress1(sequence: numbers14) { $0 + $1 }
+print(sum14) // Output: Optional(10)
+
+// Ejemplo 2: Máximo
+let maximum14 = compress1(sequence: numbers14) { max($0, $1) }
+print(maximum14) // Output: Optional(4)
+
+// Ejemplo 3: Producto
+let product14 = compress1(sequence: numbers14) { $0 * $1 }
+print(product14) // Output: Optional(24)
+
+// Ejemplo 4: Array vacío
+let empty14 = [Int]()
+let resultEmpty14 = compress1(sequence: empty14) { $0 + $1 }
+print(resultEmpty14) // Output: nil
+
+// Ejemplo 5: Un solo elemento
+let singleElement14 = [5]
+let resultSingle14 = compress1(sequence: singleElement14) { $0 + $1 }
+print(resultSingle14) // Output: Optional(5)
+
+
+// Usando compress3, que es una variante más directa
+let sum3 = compress3([1, 2, 3, 4]) { $0 + $1 }
+print(sum3) // Output: Optional(10)
+
+let max3 = compress3([1, 2, 3, 4]) { max($0, $1) }
+print(max3) // Output: Optional(4)
+
+let product3 = compress3([1, 2, 3, 4]) { $0 * $1 }
+print(product3) // Output: Optional(24)
+
+let empty3 = [Int]()
+let resultEmpty3 = compress3(empty3) { $0 + $1 }
+print(resultEmpty3) // Output: nil
+
+let singleElement3 = [5]
+let resultSingle3 = compress3(singleElement3) { $0 + $1 }
+print(resultSingle3) // Output: Optional(5)
 
  
