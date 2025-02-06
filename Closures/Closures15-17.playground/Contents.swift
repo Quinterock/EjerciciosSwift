@@ -1,3 +1,5 @@
+import Foundation
+import Cocoa
 // MARK: - Exercise 15: compress with completion
 /// Combina los elementos de un array de enteros usando una operación específica y ejecuta una acción al finalizar
 ///
@@ -115,6 +117,18 @@ func squareSumAndPrintWithCompress(sequence: [Int]) -> Int? {
     return result
 }
 
+let numbers16 = [1, 2, 3]
+let result16 = squareSumAndPrintWithCompress(sequence: numbers16)
+print(result ?? "No result") // Output: 14
+
+let empty16 = [Int]()
+let emptyResult16 = squareSumAndPrintWithCompress(sequence: empty16)
+print(emptyResult16 ?? "No result") // Output: No result
+
+let singleNumber = [5]
+let singleResult = squareSumAndPrintWithCompress(sequence: singleNumber)
+print(singleResult ?? "No result") // Output: 25
+
 // MARK: - Exercise 17: sumMultiplesOfThreeAndPrintWithCompress
 /// Calcula la suma de los múltiplos de 3 en una secuencia e imprime un mensaje después de 4 segundos
 ///
@@ -149,12 +163,35 @@ func squareSumAndPrintWithCompress(sequence: [Int]) -> Int? {
 /// ```
 
 func sumMultiplesOfThreeAndPrintWithCompress(sequence: [Int]) -> Int? {
-    guard !sequence.isEmpty else { Dispatch.main.asyncAfter(dead);
-        return nil}
-    return sequence.reduce(0) { ($0 + $1 % 3 == 0 ? $1 : 0)}
+    guard !sequence.isEmpty else {
+        DispatchQueue.global().asyncAfter(deadline: .now() + 4) {
+            print("sumMultiplesOfThreeAndPrintWithCompress operation completed.")
+        }
+        return nil
+    }
+    let sumOfMultiplesOfThree = sequence.reduce(0) { ($0 + $1 % 3 == 0 ? $1 : 0)}
+    DispatchQueue.global().asyncAfter(deadline: .now() + 4) {
+        print("sumMultiplesOfThreeAndPrintWithCompress operation completed.")
+    }
+    return sumOfMultiplesOfThree
 }
 
-//DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-//    // Este código se ejecutará después de 5 segundos
-//    print("¡5 segundos han pasado!")
-//}
+let numbers17 = [1, 3, 4, 6, 7, 9]
+let result17 = sumMultiplesOfThreeAndPrintWithCompress(sequence: numbers)
+print(result17 ?? "nil") // Output: Optional(18) // (3 + 6 + 9 = 18)
+// Después de 4 segundos imprime:
+// "sumMultiplesOfThreeAndPrintWithCompress operation completed."
+
+let noMultiples = [1, 2, 4, 5, 7, 8]
+let resultNoMultiples = sumMultiplesOfThreeAndPrintWithCompress(sequence: noMultiples)
+print(resultNoMultiples ?? "nil") // Output: Optional(0)
+// Después de 4 segundos imprime:
+// "sumMultiplesOfThreeAndPrintWithCompress operation completed."
+
+let empty17 = [Int]()
+let emptyResult17 = sumMultiplesOfThreeAndPrintWithCompress(sequence: empty17)
+print(emptyResult17 ?? "nil") // Output: nil
+// Después de 4 segundos imprime:
+// "sumMultiplesOfThreeAndPrintWithCompress operation completed."
+
+
