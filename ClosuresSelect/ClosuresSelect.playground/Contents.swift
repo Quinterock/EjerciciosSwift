@@ -96,7 +96,7 @@ print(result3) // Output: ["Swift", "Programming"]
 
 print("\nEjercicio 4")
 func longerThanFive(text: String) -> Bool {
-    return {$0 > 5}
+    return text.count > 5
 }
 
 // MARK: - Exercise 5: startingWithVowelWordsFrom
@@ -112,13 +112,24 @@ func longerThanFive(text: String) -> Bool {
 /// let result = startingWithVowelWordsFrom(sequence: words)
 /// print(result) // Output: ["Avión", "Iglesia", "Oso"]
 /// ```
-
+print("\nEjercicio 5")
 func startingWithVowelWordsFrom(sequence: [String]) -> [String] {
-    return select(sequence: sequence) {startWithVowels(strings: [$0])}
+    return select(sequence: sequence) {
+        current in
+        let vowels: Set<Character> = ["a", "e", "i", "o", "u"]
+        if let firstChar = current.first {
+            let normalizedChar = Character(String(firstChar).lowercased())
+            return vowels.contains(normalizedChar)
+        }
+        return false
+    }
 }
-/// let words = ["Avión", "Casa", "Iglesia", "Mesa", "Oso"]
-/// let result = startingWithVowelWordsFrom(sequence: words)
-/// print(result) // Output: ["Avión", "Iglesia", "Oso"]
+
+
+let words5 = ["Avión", "Casa", "Iglesia", "Mesa", "Oso"]
+let result5 = startingWithVowelWordsFrom(sequence: words5)
+print(result5) // Output: ["Avión", "Iglesia", "Oso"]
+
 // MARK: - Exercise 6: select2
 /// Versión mejorada de `select` que incluye una closure de finalización
 ///
@@ -130,8 +141,19 @@ func startingWithVowelWordsFrom(sequence: [String]) -> [String] {
 /// - Returns: Un array de strings (`[String]`) que cumplen con el predicado
 ///
 /// La función ejecuta la closure de completion con el resultado antes de retornarlo
+print("\nEjercicio 6")
+func select2(sequence: [String], predicate: (String) -> Bool, completion: ([String]) -> Void) -> [String] {
+    var accum: [String] = []
+    for element in sequence {
+        if predicate(element) {
+            accum.append(element)
+        }
+    }
 
-
+    completion(accum)
+    return accum
+    
+}
 
 // MARK: - Exercise 7: wordsInUppercaseFrom
 /// Filtra e imprime strings que están completamente en mayúsculas
@@ -152,6 +174,17 @@ func startingWithVowelWordsFrom(sequence: [String]) -> [String] {
 /// // hola
 /// // swift
 /// ```
+print("\nEjercicio 7")
+func wordsInUppercaseFrom(sequence: [String]) -> [String] {
+    select2(sequence: sequence, predicate: {$0.allSatisfy {$0.isUppercase}}, completion: { uppercaseWords in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            print("Las cadenas que estaban en mayúsculas eran:")
+            for word in uppercaseWords {
+                print(word.lowercased())
+            }
+        }
+    })
+}
 
-
-
+let words7 = ["HOLA", "Mundo", "SWIFT", "programming"]
+let result7 = wordsInUppercaseFrom(sequence: words7)
