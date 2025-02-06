@@ -690,7 +690,7 @@ let resultSingle14 = compress1(sequence: singleElement14) { $0 + $1 }
 print(resultSingle14) // Output: Optional(5)
 
 
-// Usando compress3, que es una variante más directa
+
 let sum3 = compress3([1, 2, 3, 4]) { $0 + $1 }
 print(sum3) // Output: Optional(10)
 

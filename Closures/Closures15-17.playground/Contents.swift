@@ -54,7 +54,7 @@ func compress(sequence: [Int],
               completion: (() -> Void)? = nil) -> Int? {
     
     guard !sequence.isEmpty else {
-        completion?() //Se ejecuta si el array no esta vacio
+        completion?() //Se ejecuta si el array esta vacio
         return nil //Sale de la funcion
     }
     
@@ -71,7 +71,7 @@ let result = compress(sequence: numbers,
                       combinationOperation: { $0 + $1 }) {
     print("¡Operación completada!")
 }
-print(result) // Output: Optional(10)
+print(result ?? "nil") // Output: Optional(10)
 
 // MARK: - Exercise 16: squareSumAndPrintWithCompress
 /// Calcula la suma de los cuadrados de una secuencia de números e imprime un mensaje al completar
@@ -103,7 +103,17 @@ print(result) // Output: Optional(10)
 /// print(singleResult) // Output: Optional(25) // (5² = 25)
 /// ```
 
-                                   
+func squareSumAndPrintWithCompress(sequence: [Int]) -> Int? {
+    guard !sequence.isEmpty else {
+        print("squareSumAndPrintWithCompress operation completed.")
+        return nil
+    }
+    //let result = sequence.reduce(0) {$0 + $1 * $1}
+    let result = sequence.reduce(0){(accumulator, currentValue) in accumulator + currentValue * currentValue
+    }
+    print("squareSumAndPrintWithCompress operation completed.")
+    return result
+}
 
 // MARK: - Exercise 17: sumMultiplesOfThreeAndPrintWithCompress
 /// Calcula la suma de los múltiplos de 3 en una secuencia e imprime un mensaje después de 4 segundos
@@ -137,3 +147,14 @@ print(result) // Output: Optional(10)
 /// // Después de 4 segundos imprime:
 /// // "sumMultiplesOfThreeAndPrintWithCompress operation completed."
 /// ```
+
+func sumMultiplesOfThreeAndPrintWithCompress(sequence: [Int]) -> Int? {
+    guard !sequence.isEmpty else { Dispatch.main.asyncAfter(dead);
+        return nil}
+    return sequence.reduce(0) { ($0 + $1 % 3 == 0 ? $1 : 0)}
+}
+
+//DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+//    // Este código se ejecutará después de 5 segundos
+//    print("¡5 segundos han pasado!")
+//}
